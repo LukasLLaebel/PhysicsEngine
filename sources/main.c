@@ -1,35 +1,45 @@
+#include "objects.h"
 #include "raylib.h"
 
-#define SCREEN_WIDTH (800)
-#define SCREEN_HEIGHT (450)
+const int screenWidth = 800;
+const int screenHeight = 600;
 
-#define WINDOW_TITLE "Window title"
+int main() {
+  InitWindow(screenWidth, screenHeight, "Physics Engine");
+  SetTargetFPS(60);
 
-int main(void)
-{
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, WINDOW_TITLE);
-    SetTargetFPS(60);
+  // Create an array of circles
+  const int numCircles = 5;
+  Circle circles[numCircles];
 
-    Texture2D texture = LoadTexture(ASSETS_PATH"test.png"); // Check README.md for how this works
+  // Initialize each circle at different positions
+  initCircle(&circles[0], 100, 100, 50.0f);
+  initCircle(&circles[1], 300, 200, 40.0f);
+  initCircle(&circles[2], 500, 150, 60.0f);
+  initCircle(&circles[3], 200, 400, 45.0f);
+  initCircle(&circles[4], 600, 300, 55.0f);
 
-    while (!WindowShouldClose())
-    {
-        BeginDrawing();
+  // Main game loop
+  while (!WindowShouldClose()) {
+    float deltaTime = GetFrameTime();
 
-        ClearBackground(RAYWHITE);
-
-        const int texture_x = SCREEN_WIDTH / 2 - texture.width / 2;
-        const int texture_y = SCREEN_HEIGHT / 2 - texture.height / 2;
-        DrawTexture(texture, texture_x, texture_y, WHITE);
-
-        const char* text = "OMG! IT WORKS!";
-        const Vector2 text_size = MeasureTextEx(GetFontDefault(), text, 20, 1);
-        DrawText(text, SCREEN_WIDTH / 2 - text_size.x / 2, texture_y + texture.height + text_size.y + 10, 20, BLACK);
-
-        EndDrawing();
+    // Update all circles
+    for (int i = 0; i < numCircles; i++) {
+      updateCircle(&circles[i], deltaTime);
     }
 
-    CloseWindow();
+    // Draw
+    BeginDrawing();
+    ClearBackground(RAYWHITE);
 
-    return 0;
+    // Draw all circles
+    for (int i = 0; i < numCircles; i++) {
+      drawCircle(&circles[i]);
+    }
+
+    EndDrawing();
+  }
+
+  CloseWindow();
+  return 0;
 }

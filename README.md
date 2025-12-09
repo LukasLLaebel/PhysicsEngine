@@ -1,42 +1,80 @@
-# Simple and portable CMake template for raylib
+# PhysicsEngine
 
-This is a basic project template for raylib using CMake and has been tested with Visual Studio, Visual Studio Code and CLion.
+A 2D physics engine built with C and [raylib](https://www.raylib.com/) for real-time physics simulation and visualization.
 
-The master branch of the raylib source code is downloaded using CMake FetchContent from github and compiled from source as it is much easier than including prebuilt binaries for every platform and configuration.
+## About
 
-Building from the cmake file will build both raylib and `src/main.c` which includes a basic example of a raylib program.
+This project is a physics engine implementation using raylib for rendering.  The engine is designed to simulate physical interactions and behaviors in 2D space.
 
-## Asset handling
+## Building
 
-The example in `src/main.c` uses an example image located in the `assets` folder.
-To load it we use `ASSETS_PATH`, which is a string macro with the *absolute* path "assets" directory.
-This macro is defined in the `CMakeLists.txt` file on line `23`.
- 
-If you plan on releasing or sharing your game consider manually setting the value of the `ASSETS_PATH` macro.
-
-In C you can concatenate string literals by putting them next to each other, 
-eg: `"A" "B"` is `"AB"`. So ASSETS_PATH `"test.png"` becomes `"/path/to/your/assets/test.png"`
-
-If you wanna share your game with others you should set ASSETS_PATH to be a *relative* path like "./assets/". You can do this in the CMakeLists.txt file. 
-
-## Using C++
-
-Using c++ is quite simple, just change these lines in the `CMakeLists.txt`
-from
+This project uses CMake and automatically fetches raylib from GitHub during the build process.
+```bash
 ```
-project(my_raylib_game C)
-
-set(CMAKE_C_STANDARD 99)
-
-file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/sources/*.c")
 ```
-to
 ```
-project(my_raylib_game CXX)
+```bash
+# Clone the repository
+git clone https://github.com/LukasLLaebel/PhysicsEngine.git
+cd PhysicsEngine
 
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# Create build directory
+mkdir build
+cd build
 
-file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/sources/*.cpp")
+# Configure and build
+cmake .. -G Ninja 
+# run
+ninja
+./PhysicsEngine
 ```
-After this just reload cmake and it should build fine.
+```
+```
+```
+```
+
+
+## Running
+
+After building, run the executable:
+
+```bash
+# From the build directory
+./PhysicsEngine
+```
+
+## Project Structure
+
+```bash
+PhysicsEngine/
+├── sources/        # Source code files
+│   ├── main.c      # Main application entry point
+│   ├── objects.c   # Physics object implementations
+│   └── objects.h   # Physics object definitions
+├── assets/         # Assets (images, textures, etc.)
+├── CMakeLists.txt  # CMake build configuration
+└── README. md       # This file
+```
+
+## Asset Handling
+
+The project uses the `ASSETS_PATH` macro to locate assets.  By default, this is set to an absolute path for development. 
+
+To distribute your application, modify line 33 in `CMakeLists.txt`:
+
+```cmake
+# Development (absolute path)
+target_compile_definitions(${PROJECT_NAME} PUBLIC ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/")
+
+# Release (relative path - uncomment for distribution)
+# target_compile_definitions(${PROJECT_NAME} PUBLIC ASSETS_PATH="./assets/")
+```
+
+## Development
+
+The project uses C99 standard and includes LSP support through `compile_commands.json` for better IDE integration.
+
+
+## Dependencies
+
+- [raylib](https://github.com/raysan5/raylib) - Automatically fetched and built via CMake
